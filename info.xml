@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <extension key="nl.sp.membershipapi" type="module">
   <file>membershipapi</file>
-  <name>FIXME</name>
-  <description>FIXME</description>
+  <name>Custom Membership API</name>
+  <description>Custom API for the SP to create memberships and membershipspayments</description>
   <license>AGPL-3.0</license>
   <maintainer>
     <author>Jaap Jansma</author>
