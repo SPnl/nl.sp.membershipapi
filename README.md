@@ -9,6 +9,11 @@ This extension adds an action to the membership API: **spcreate**
 |---|---|---|---|
 | contact_id   | y  |   |   |
 | membership_type_id   | y  |   |   |
+| membership_start_date  | n  |   |   |
+| membership_end_date   | n  |   |   |
+| join_date   | n  |   |   |
+| status_id   | n  |   |   |
+| num_terms   | n  |   |   |
 | new_mandaat | n | 0 | 0 = don't create a new SEPA mandaat, 1 = create new SEPA mandaat |
 | mandaat_status | yes when new_mandaat is set |   | FRST, RCUR, OOFF, NEW |
 | mandaat_datum | yes when new_mandaat is set |   |   |

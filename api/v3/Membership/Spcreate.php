@@ -117,6 +117,9 @@ function _spmembership_api_filter_membership_parameters($params) {
   if (isset($params['membership_end_date'])) {
     $membership_params['membership_end_date'] = $params['membership_end_date'];
   }
+  if (isset($params['status_id'])) {
+    $membership_params['status_id'] = $params['status_id'];
+  }
   foreach($params as $key => $value) {
     if (stripos($key, "custom_")===0) {
       //this is a custom field copy it to the membership 
