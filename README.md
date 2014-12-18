@@ -24,4 +24,6 @@ This extension adds an action to the membership API: **spcreate**
 | bic | n |   |   |
 | total_amount | y |   | the total amount for the membership payment |
 | financial_type_id | y |   |   |
+| contribution_status_id   | n  |   |   |
+| payment_instrument | n  |   |   |
 

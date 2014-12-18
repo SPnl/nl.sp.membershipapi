@@ -93,6 +93,12 @@ function _spmembership_api_filter_contribution_parameters($params) {
   $contribution_parameters['contact_id'] = $params['contact_id'];
   $contribution_parameters['total_amount'] = $params['total_amount'];
   $contribution_parameters['financial_type_id'] = $params['financial_type_id'];
+  if(isset($params['contribution_status_id'])) {
+  	$contribution_parameters['contribution_status_id'] = $params['contribution_status_id'];
+  }
+  if(isset($params['payment_instrument'])) {
+  	$contribution_parameters['payment_instrument'] = $params['payment_instrument'];
+  }
   
   foreach($params as $key => $value) {
     if (stripos($key, "custom_")===0) {
