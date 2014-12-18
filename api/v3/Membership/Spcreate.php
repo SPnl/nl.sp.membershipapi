@@ -96,8 +96,8 @@ function _spmembership_api_filter_contribution_parameters($params) {
   if(isset($params['contribution_status_id'])) {
   	$contribution_parameters['contribution_status_id'] = $params['contribution_status_id'];
   }
-  if(isset($params['payment_instrument'])) {
-  	$contribution_parameters['payment_instrument'] = $params['payment_instrument'];
+  if(isset($params['payment_instrument_id'])) {
+  	$contribution_parameters['payment_instrument_id'] = $params['payment_instrument_id'];
   }
   
   foreach($params as $key => $value) {

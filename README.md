@@ -25,5 +25,5 @@ This extension adds an action to the membership API: **spcreate**
 | total_amount | y |   | the total amount for the membership payment |
 | financial_type_id | y |   |   |
 | contribution_status_id   | n  |   |   |
-| payment_instrument | n  |   |   |
+| payment_instrument_id | n  |   |   |
 
