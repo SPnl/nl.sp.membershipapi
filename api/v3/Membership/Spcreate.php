@@ -33,8 +33,7 @@ function civicrm_api3_membership_spcreate($params) {
   }
   if (!empty($params['new_mandaat'])) {
     //validate mandaat fields
-    if (empty($params['mandaat_status']) ||
-        empty($params['iban']) ||
+    if (empty($params['iban']) ||
         empty($params['mandaat_datum']) ||
         empty($params['mandaat_plaats'])
     ) {
@@ -140,10 +139,16 @@ function _spmembership_api_filter_membership_parameters($params) {
 
 function _spmembership_api_filter_sepamandaat_parameters($params) {
   $config = CRM_Sepamandaat_Config_SepaMandaat::singleton();
+
+  $iban = new IBAN($params['iban']);
   
   $sepa_params['id'] = $params['contact_id'];
-  $sepa_params['custom_'.$config->getCustomField('status', 'id')] = $params['mandaat_status'];
-  $sepa_params['custom_'.$config->getCustomField('IBAN', 'id')] = $params['iban'];
+  if (isset($params['mandaat_status'])) {
+    $sepa_params['custom_' . $config->getCustomField('status', 'id')] = $params['mandaat_status'];
+  } else {
+    $sepa_params['custom_'.$config->getCustomField('status', 'id')] = 'NEW';
+  }
+  $sepa_params['custom_'.$config->getCustomField('IBAN', 'id')] = $iban->MachineFormat();
   $sepa_params['custom_'.$config->getCustomField('mandaat_datum', 'id')] = $params['mandaat_datum'];
   $sepa_params['custom_'.$config->getCustomField('plaats', 'id')] = $params['mandaat_plaats'];
   if (isset($params['bic'])) {
