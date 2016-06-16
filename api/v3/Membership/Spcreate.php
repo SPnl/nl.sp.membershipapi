@@ -53,6 +53,7 @@ function civicrm_api3_membership_spcreate($params) {
     $membership_mandaat_config = CRM_Sepamandaat_Config_MembershipSepaMandaat::singleton();
     $contribution_mandaat_config = CRM_Sepamandaat_Config_ContributionSepaMandaat::singleton();
     $sepa_params = _spmembership_api_filter_sepamandaat_parameters($params);
+    CRM_Core_Error::debug_log_message('Parameerts for sepa mandaat: '.var_export($sepa_params, true));
     civicrm_api3('Contact', 'create', $sepa_params);
     $customParams = array();
     $customParams['return.custom_'.$mandaat_config->getCustomField('mandaat_nr', 'id')] = 1;

@@ -1,14 +1,14 @@
 <?php
 
-require_once 'membershipapi.civix.php';
+require_once 'spcustomapi.civix.php';
 
 /**
  * Implementation of hook_civicrm_config
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config
  */
-function membershipapi_civicrm_config(&$config) {
-  _membershipapi_civix_civicrm_config($config);
+function spcustomapi_civicrm_config(&$config) {
+  _spcustomapi_civix_civicrm_config($config);
 }
 
 /**
@@ -18,8 +18,8 @@ function membershipapi_civicrm_config(&$config) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_xmlMenu
  */
-function membershipapi_civicrm_xmlMenu(&$files) {
-  _membershipapi_civix_civicrm_xmlMenu($files);
+function spcustomapi_civicrm_xmlMenu(&$files) {
+  _spcustomapi_civix_civicrm_xmlMenu($files);
 }
 
 /**
@@ -27,8 +27,8 @@ function membershipapi_civicrm_xmlMenu(&$files) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_install
  */
-function membershipapi_civicrm_install() {
-  return _membershipapi_civix_civicrm_install();
+function spcustomapi_civicrm_install() {
+  return _spcustomapi_civix_civicrm_install();
 }
 
 /**
@@ -36,8 +36,8 @@ function membershipapi_civicrm_install() {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_uninstall
  */
-function membershipapi_civicrm_uninstall() {
-  return _membershipapi_civix_civicrm_uninstall();
+function spcustomapi_civicrm_uninstall() {
+  return _spcustomapi_civix_civicrm_uninstall();
 }
 
 /**
@@ -45,8 +45,8 @@ function membershipapi_civicrm_uninstall() {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_enable
  */
-function membershipapi_civicrm_enable() {
-  return _membershipapi_civix_civicrm_enable();
+function spcustomapi_civicrm_enable() {
+  return _spcustomapi_civix_civicrm_enable();
 }
 
 /**
@@ -54,8 +54,8 @@ function membershipapi_civicrm_enable() {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_disable
  */
-function membershipapi_civicrm_disable() {
-  return _membershipapi_civix_civicrm_disable();
+function spcustomapi_civicrm_disable() {
+  return _spcustomapi_civix_civicrm_disable();
 }
 
 /**
@@ -69,8 +69,8 @@ function membershipapi_civicrm_disable() {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_upgrade
  */
-function membershipapi_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
-  return _membershipapi_civix_civicrm_upgrade($op, $queue);
+function spcustomapi_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
+  return _spcustomapi_civix_civicrm_upgrade($op, $queue);
 }
 
 /**
@@ -81,8 +81,8 @@ function membershipapi_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_managed
  */
-function membershipapi_civicrm_managed(&$entities) {
-  return _membershipapi_civix_civicrm_managed($entities);
+function spcustomapi_civicrm_managed(&$entities) {
+  return _spcustomapi_civix_civicrm_managed($entities);
 }
 
 /**
@@ -94,8 +94,8 @@ function membershipapi_civicrm_managed(&$entities) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_caseTypes
  */
-function membershipapi_civicrm_caseTypes(&$caseTypes) {
-  _membershipapi_civix_civicrm_caseTypes($caseTypes);
+function spcustomapi_civicrm_caseTypes(&$caseTypes) {
+  _spcustomapi_civix_civicrm_caseTypes($caseTypes);
 }
 
 /**
@@ -103,6 +103,6 @@ function membershipapi_civicrm_caseTypes(&$caseTypes) {
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_alterSettingsFolders
  */
-function membershipapi_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
-  _membershipapi_civix_civicrm_alterSettingsFolders($metaDataFolders);
+function spcustomapi_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
+  _spcustomapi_civix_civicrm_alterSettingsFolders($metaDataFolders);
 }

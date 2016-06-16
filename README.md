@@ -1,9 +1,13 @@
-nl.sp.membershipapi
-===================
+nl.sp.spcustomapi
+=================
 
-Custom membership API for the SP
+This extension contains custom CiviCRM API methods specific for the SP.  
+(Formerly known as nl.sp.membershipapi.) 
 
-This extension adds an action to the membership API: **spcreate**
+Membership API
+--------------
+
+Adds an action to the membership API: **Membership.SPCreate**.
 
 | Parameter  | Required  | Default value | Description |
 |---|---|---|---|
@@ -27,3 +31,10 @@ This extension adds an action to the membership API: **spcreate**
 | contribution_status_id   | n  |   |   |
 | payment_instrument_id | n  |   |   |
 
+
+SP Maps API
+-----------
+
+Adds an action to the contact API: **Contact.GetExtended**.  
+
+**TODO**
