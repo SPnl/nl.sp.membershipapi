@@ -7,7 +7,8 @@ This extension contains custom CiviCRM API methods specific for the SP.
 Membership API
 --------------
 
-Adds an action to the membership API: **Membership.SPCreate**.
+Adds an action to the membership API: **Membership.SPCreate**.  
+This action creates a new SP and/or ROOD membership, and automatically adds an IBAN account and a SEPA mandate. This method is used by the member signup forms on the website.
 
 | Parameter  | Required  | Default value | Description |
 |---|---|---|---|
@@ -32,9 +33,16 @@ Adds an action to the membership API: **Membership.SPCreate**.
 | payment_instrument_id | n  |   |   |
 
 
-SP Maps API
+Contact API
 -----------
 
-Adds an action to the contact API: **Contact.GetExtended**.  
+Adds an action to the contact API: **Contact.GetSPData**.  
+This action returns the result of a query that contains all contact information including current membership information. The query is very similar to the one used in LegacyExport.Generate.
+The only filter this method currently supports is 'contact_id'. If this parameter is not set, this method will return *all* SP and ROOD *members* that are accessible to the user using the API.  
+The 'limit' and 'offset' options are also supported.
 
-**TODO**
+| Parameter | Required | Default value | Description |
+|---|---|---|---|
+| contact_id | n | | Contact ID |
+| options.limit | n | | Limit (default: 25) |
+| options.offset | n | | Offset (default: 0) |
