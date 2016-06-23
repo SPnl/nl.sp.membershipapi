@@ -1,5 +1,5 @@
 Package: nl.sp.spcustomapi
-Copyright (C) 2014, Jaap Jansma <helpdesk@civicoop.org>
+Copyright (C) 2014-2016 CiviCooP (Jaap Jansma, Kevin Levie) <helpdesk@civicoop.org>
 Licensed under the GNU Affero Public License 3.0 (below).
 
 -------------------------------------------------------------------------------

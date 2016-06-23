@@ -39,10 +39,16 @@ Contact API
 Adds an action to the contact API: **Contact.GetSPData**.  
 This action returns the result of a query that contains all contact information including current membership information. The query is very similar to the one used in LegacyExport.Generate.
 The only filter this method currently supports is 'contact_id'. If this parameter is not set, this method will return *all* SP and ROOD *members* that are accessible to the user using the API.  
-The 'limit' and 'offset' options are also supported.
+The API will return SP staff contacts that aren't SP members if 'include_spspecial' is set to 1. It will return detailed membership data for all active memberships if 'include_memberships' is set to 1, and active relationships if 'include_relationships' is set to 1.  
+The options 'limit', 'offset' and 'sequential' are also supported.
 
 | Parameter | Required | Default value | Description |
 |---|---|---|---|
 | contact_id | n | | Contact ID |
-| options.limit | n | | Limit (default: 25) |
-| options.offset | n | | Offset (default: 0) |
+| include_spspecial | n | 0 | Include SP staff who aren't members |
+| include_memberships | n | 0 | Include SP membership data |
+| include_relationships | n | 0 | Include SP relationship data |
+| options.limit | n | 25 | Limit |
+| options.offset | n | 0 | Offset | 
+| sequential | n | 0 | Sequential |
+

@@ -5,7 +5,7 @@
   <description>Custom API methods for the SP (former name: nl.sp.membershipapi)</description>
   <license>AGPL-3.0</license>
   <maintainer>
-    <author>Jaap Jansma / Kevin Levie</author>
+    <author>CiviCooP (Jaap Jansma, Kevin Levie)</author>
     <email>helpdesk@civicoop.org</email>
   </maintainer>
   <releaseDate>2014-12-04</releaseDate>
@@ -18,6 +18,6 @@
     <ver>4.7</ver>
   </compatibility>
   <civix>
-    <namespace>CRM/spcustomapi</namespace>
+    <namespace>CRM/SPCustomApi</namespace>
   </civix>
 </extension>
