@@ -75,7 +75,7 @@ function civicrm_api3_membership_spcreate($params) {
   $contribution = civicrm_api3('Contribution', 'create', $contributionParams);
   
   if ($iban || $bic) {
-    CRM_Ibanaccounts_Ibanaccounts::saveIbanForMembership($membership['id'], $params['contact_id'], $iban, $bic);
+    CRM_Ibanaccounts_Ibanaccounts::saveIbanForMembership($membership['id'], $params['contact_id'], $iban, $bic, '');
   }
   
   $membershipPayment['contribution_id'] = $contribution['id'];
