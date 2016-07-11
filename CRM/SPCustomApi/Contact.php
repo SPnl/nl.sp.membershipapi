@@ -54,7 +54,6 @@ class CRM_SPCustomApi_Contact {
 
     // Other data used to enrich this export
     $genderCodes = \CRM_Core_PseudoConstant::get('CRM_Contact_DAO_Contact', 'gender_id');
-    $membershipTypes = \CRM_Member_PseudoConstant::membershipType();
     $spGeoNames = static::getSPGeostelselNames();
 
     // Execute contact query (civicrm_contact and all data that is tied directly to a single civicrm_contact record))
@@ -103,8 +102,11 @@ SQL;
       $contacts[$cres->contact_id] = $contact;
       $cids[] = $cres->contact_id;
     }
-    $cres->free();
+
     $cidlist = implode(',', $cids);
+    if($cres instanceof \CRM_Core_DAO) {
+      $cres->free();
+    }
 
     // Fetch *current* SP and/or ROOD memberships for these contacts, if include_memberships is set
     if ($params['include_memberships']) {
@@ -154,7 +156,9 @@ SQL;
         }
       }
     }
-    $mres->free();
+    if($mres instanceof \CRM_Core_DAO) {
+      $mres->free();
+    }
 
     // Fetch *current* relationships for contacts, if include_relationships is set
     if ($params['include_relationships']) {
@@ -183,7 +187,9 @@ SQL;
         $contact['relationships'][] = $rel;
       }
     }
-    $rres->free();
+    if($rres instanceof \CRM_Core_DAO) {
+      $rres->free();
+    }
 
     // Remove array keys is params.sequential = 1
     if ($params['sequential'] == 1) {
