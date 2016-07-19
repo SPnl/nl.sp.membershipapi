@@ -18,15 +18,15 @@ class CRM_SPCustomApi_Contact {
     $session = \CRM_Core_Session::singleton();
     $contactId = $session->get('userID');
     if (!isset($contactId) && !empty($params['check_permissions'])) {
-      throw new \Exception('User not logged in or session->userID not set.', 400);
+      throw new \CRM_SPCustomApi_Exception('User not logged in or session->userID not set.', 400);
     }
 
     // Get ACL
     $tables = ['civicrm_contact'];
     $whereTables = ['civicrm_membership', 'civicrm_relationship']; // Lijkt niet veel te doen
     if(!empty($params['check_permissions'])) {
-      // Filter voor users / afdelingen komt uit CRM_Accesscontrol_Acl
-      $whereClause = \CRM_ACL_BAO_ACL::whereClause(CRM_Core_Permission::VIEW, $tables, $whereTables, $contactId);
+      // Filter voor users / afdelingen: beperking via ACL door nl.sp.accesscontrol
+      $whereClause = \CRM_ACL_BAO_ACL::whereClause(\CRM_Core_Permission::VIEW, $tables, $whereTables, $contactId);
     }
 
     if(!isset($whereClause) || $whereClause == '1') {
@@ -109,7 +109,7 @@ SQL;
     }
 
     // Fetch *current* SP and/or ROOD memberships for these contacts, if include_memberships is set
-    if ($params['include_memberships']) {
+    if ($params['include_memberships'] && !empty($cidlist)) {
       $mTypes = "'" . implode("','", ['Lid SP', 'Lid ROOD', 'Lid SP en ROOD']) . "'";
       $mStatuses = "'" . implode("','", ['New', 'Current', 'Grace', 'Deceased']) . "'";
 
@@ -161,7 +161,7 @@ SQL;
     }
 
     // Fetch *current* relationships for contacts, if include_relationships is set
-    if ($params['include_relationships']) {
+    if ($params['include_relationships'] && !empty($cidlist)) {
 
       $rquery = <<<SQL
 SELECT DISTINCT crel.id, crel.contact_id_a, crel.contact_id_b, creltype.name_a_b, creltype.label_a_b,
