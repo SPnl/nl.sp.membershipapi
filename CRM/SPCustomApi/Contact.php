@@ -24,12 +24,12 @@ class CRM_SPCustomApi_Contact {
     // Get ACL
     $tables = ['civicrm_contact'];
     $whereTables = ['civicrm_membership', 'civicrm_relationship']; // Lijkt niet veel te doen
-    if(!empty($params['check_permissions'])) {
+    if (!empty($params['check_permissions'])) {
       // Filter voor users / afdelingen: beperking via ACL door nl.sp.accesscontrol
       $whereClause = \CRM_ACL_BAO_ACL::whereClause(\CRM_Core_Permission::VIEW, $tables, $whereTables, $contactId);
     }
 
-    if(!isset($whereClause) || $whereClause == '1') {
+    if (!isset($whereClause) || $whereClause == '1') {
       // Filter voor landelijke gebruikers of voor legacy-export wordt hier alsnog even handmatig ingesteld, om in ieder geval alleen recente leden mee te geven
       $membership_type = \CRM_Geostelsel_Config_MembershipTypes::singleton();
       $whereClause = 'membership_access.membership_type_id IN (' . implode(", ", $membership_type->getMembershipTypeIds()) . ') 
@@ -104,7 +104,7 @@ SQL;
     }
 
     $cidlist = implode(',', $cids);
-    if($cres instanceof \CRM_Core_DAO) {
+    if ($cres instanceof \CRM_Core_DAO) {
       $cres->free();
     }
 
@@ -156,7 +156,7 @@ SQL;
         }
       }
     }
-    if($mres instanceof \CRM_Core_DAO) {
+    if ($mres instanceof \CRM_Core_DAO) {
       $mres->free();
     }
 
@@ -187,7 +187,7 @@ SQL;
         $contact['relationships'][] = $rel;
       }
     }
-    if($rres instanceof \CRM_Core_DAO) {
+    if ($rres instanceof \CRM_Core_DAO) {
       $rres->free();
     }
 

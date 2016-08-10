@@ -52,3 +52,16 @@ The options 'limit', 'offset' and 'sequential' are also supported.
 | options.offset | n | 0 | Offset | 
 | sequential | n | 0 | Sequential |
 
+
+
+Contribution API
+----------------
+
+Adds an action to the contribution API: **Contribution.LinkToMembership**.  
+This API function searches for all contributions based on the _source_ field and links them to an active membership. The source field is emptied afterwards. If a contribution has already been linked to a membership, it will be skipped.
+
+| Parameter | Required | Default value | Description |
+|---|---|---|---|
+| source | y | | Source field for the contributions we're looking for |
+| membership_type_id | n | 0 | A comma separated list of membership type ids |
+| limit | n | 200 | Optional limit |
