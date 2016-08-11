@@ -9,7 +9,9 @@ function _civicrm_api3_contact_getspdata_params() {
     'contact_id'            => ['api.required' => 0, 'name' => 'contact_id',
                                 'title' => 'Contact ID (int)', 'type' => CRM_Utils_Type::T_INT],
     'city'                  => ['api.required' => 0, 'name' => 'city',
-                                'title' => 'City (string or array of strings)', 'type' => CRM_Utils_Type::T_STRING],
+                                'title' => 'Woonplaats (string or array of strings)', 'type' => CRM_Utils_Type::T_STRING],
+    'gemeente'                  => ['api.required' => 0, 'name' => 'gemeente',
+                                'title' => 'Gemeente (string or array of strings)', 'type' => CRM_Utils_Type::T_STRING],
     'geo_code_1'            => ['api.required' => 0, 'name' => 'geo_code_1',
                                 'title' => 'Latitude (between, array of two floats)', 'type' => CRM_Utils_Type::T_TEXT],
     'geo_code_2'            => ['api.required' => 0, 'name' => 'geo_code_2',
@@ -72,6 +74,12 @@ function civicrm_api3_contact_getspdata($params) {
   if(isset($params['city'])) {
     if(isset($params['city']['IN'])) {
       $params['city'] = $params['city']['IN'];
+    }
+  }
+
+  if(isset($params['gemeente'])) {
+    if(isset($params['gemeente']['IN'])) {
+      $params['gemeente'] = $params['gemeente']['IN'];
     }
   }
 

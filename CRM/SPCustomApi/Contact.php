@@ -52,7 +52,20 @@ class CRM_SPCustomApi_Contact {
         $cities = '"' . implode('", "', $params['city']) . '"';
         $whereClause = " caddr.city IN (" . $cities . ") AND " . $whereClause;
       } else {
-        $whereClause = " caddr.city = '" . CRM_Core_DAO::escapeString($params['city']) . "' AND " . $whereClause;
+        $whereClause = " caddr.city LIKE '" . CRM_Core_DAO::escapeString($params['city']) . "' AND " . $whereClause;
+      }
+    }
+
+    // Add gemeente/gemeenten to where clause if defined
+    if (!empty($params['gemeente'])) {
+      if(is_array($params['gemeente'])) {
+        foreach($params['gemeente'] as &$c) {
+          $c = CRM_Core_DAO::escapeString($c);
+        }
+        $cities = '"' . implode('", "', $params['gemeente']) . '"';
+        $whereClause = " caddrx.gemeente_24 IN (" . $cities . ") AND " . $whereClause;
+      } else {
+        $whereClause = " caddrx.gemeente_24 LIKE '" . CRM_Core_DAO::escapeString($params['gemeente']) . "' AND " . $whereClause;
       }
     }
 
