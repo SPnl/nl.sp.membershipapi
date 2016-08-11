@@ -38,9 +38,30 @@ class CRM_SPCustomApi_Contact {
       AND (membership_access.end_date >= NOW() - INTERVAL 3 MONTH)))';
     }
 
-    // Add contact id to where clause if necessary
+    // Add contact id to where clause if defined
     if (!empty($params['contact_id'])) {
-      $whereClause = " contact_a.id = {$params['contact_id']} AND {$whereClause}";
+      $whereClause = " contact_a.id = " . (int)$params['contact_id'] . " AND " . $whereClause;
+    }
+
+    // Add city/cities to where clause if defined
+    if (!empty($params['city'])) {
+      if(is_array($params['city'])) {
+        foreach($params['city'] as &$c) {
+          $c = CRM_Core_DAO::escapeString($c);
+        }
+        $cities = '"' . implode('", "', $params['city']) . '"';
+        $whereClause = " caddr.city IN (" . $cities . ") AND " . $whereClause;
+      } else {
+        $whereClause = " caddr.city = '" . CRM_Core_DAO::escapeString($params['city']) . "' AND " . $whereClause;
+      }
+    }
+
+    // Add coordinates to where clause if defined
+    if (!empty($params['geo_code_1'])) {
+      $whereClause = " caddr.geo_code_1 BETWEEN " . (float)$params['geo_code_1'][0] . " AND " . (float)$params['geo_code_1'][1] . " AND " . $whereClause;
+    }
+    if (!empty($params['geo_code_2'])) {
+      $whereClause = " caddr.geo_code_2 BETWEEN " . (float)$params['geo_code_2'][0] . " AND " . (float)$params['geo_code_2'][1] . " AND " . $whereClause;
     }
 
     // If include_spspecial is set, add contacts who have a staff relationship type
@@ -78,8 +99,9 @@ SELECT contact_a.id AS contact_id, first_name, middle_name, last_name, cmigr.voo
   {$relationshipJoin}
   WHERE {$whereClause}
   GROUP BY contact_a.id
-  ORDER BY contact_a.id ASC LIMIT {$params['offset']},{$params['limit']}
+  ORDER BY contact_a.id ASC LIMIT {$params['options']['offset']},{$params['options']['limit']}
 SQL;
+    // return civicrm_api3_create_error(['query' => $query]);
     $cres = \CRM_Core_DAO::executeQuery($query);
 
     // Store contacts, and get all contact ids for the next query
