@@ -1,6 +1,31 @@
 <?php
 
 /**
+ * API Method Parameters
+ * @return array
+ */
+function _civicrm_api3_contact_getspdata_params() {
+  return [
+    'contact_id'            => ['api.required' => 0, 'name' => 'contact_id',
+                                'title' => 'Contact ID (int)', 'type' => CRM_Utils_Type::T_INT],
+    'city'                  => ['api.required' => 0, 'name' => 'city',
+                                'title' => 'City (string or array of strings)', 'type' => CRM_Utils_Type::T_STRING],
+    'geo_code_1'            => ['api.required' => 0, 'name' => 'geo_code_1',
+                                'title' => 'Latitude (between, array of two floats)', 'type' => CRM_Utils_Type::T_TEXT],
+    'geo_code_2'            => ['api.required' => 0, 'name' => 'geo_code_2',
+                                'title' => 'Longitude (between, array of two floats)', 'type' => CRM_Utils_Type::T_TEXT],
+    'include_spspecial'     => ['api.required' => 0, 'name' => 'include_spspecial',
+                                'title' => 'Include SP staff who aren\'t members', 'type' => CRM_Utils_Type::T_BOOLEAN],
+    'include_memberships'   => ['api.required' => 0, 'name' => 'include_memberships',
+                                'title' => 'Include SP membership data', 'type' => CRM_Utils_Type::T_BOOLEAN],
+    'include_relationships' => ['api.required' => 0, 'name' => 'include_relationships',
+                                'title' => 'Include SP relationship data', 'type' => CRM_Utils_Type::T_BOOLEAN],
+    'sequential'            => ['api.required' => 0, 'name' => 'sequential',
+                                'title' => 'Sequential', 'type' => CRM_Utils_Type::T_BOOLEAN],
+  ];
+}
+
+/**
  * Contact.GetSPData API specification
  * This is used for documentation and validation.
  * @see http://wiki.civicrm.org/confluence/display/CRM/API+Architecture+Standards
@@ -8,13 +33,8 @@
  * @return void
  */
 function _civicrm_api3_contact_getspdata_spec(&$params) {
-  $params['contact_id']['api.required'] = 0;
-  $params['include_spspecial']['api.required'] = 0;
-  $params['include_memberships']['api.required'] = 0;
-  $params['include_relationships']['api.required'] = 0;
-  $params['options']['limit']['api.required'] = 0;
-  $params['options']['offset']['api.required'] = 0;
-  $params['sequential'] = 0;
+  $myparams = _civicrm_api3_contact_getspdata_params();
+  $params = array_merge($params, $myparams);
 }
 
 /**
@@ -28,14 +48,63 @@ function _civicrm_api3_contact_getspdata_spec(&$params) {
  */
 function civicrm_api3_contact_getspdata($params) {
 
-  // Set default parameters
-  $params['contact_id'] = $params['contact_id'] ? (int) $params['contact_id'] : NULL;
+  // Parse booleans and options
   $params['include_spspecial'] = ($params['include_spspecial'] == 1);
   $params['include_memberships'] = ($params['include_memberships'] == 1);
   $params['include_relationships'] = ($params['include_relationships'] == 1);
-  $params['limit'] = $params['options']['limit'] ? (int) $params['options']['limit'] : 25;
-  $params['offset'] = $params['options']['offset'] ? (int) $params['options']['offset'] : 0;
+  $params['options']['limit'] = !empty($params['options']['limit']) ? (int) $params['options']['limit'] : 25;
+  $params['options']['offset'] = !empty($params['options']['offset']) ? (int) $params['options']['offset'] : 0;
   $params['sequential'] = ($params['sequential'] == 1) ? TRUE : FALSE;
+
+  // Validatie voor Bob!
+  $validSystemParams = ['options','version', 'check_permission', 'prettyprint', 'access_token'];
+  $methodParams = array_merge(array_keys(_civicrm_api3_contact_getspdata_params()), $validSystemParams);
+  $invalidParams = [];
+  foreach ($params as $k => $p) {
+    if (!in_array($k, $methodParams)) {
+      $invalidParams[] = $k;
+    }
+  }
+  if (count($invalidParams) > 0) {
+    return civicrm_api3_create_error('Invalid parameter(s): ' . implode(', ', $invalidParams) . '.');
+  }
+
+  if(isset($params['city'])) {
+    if(isset($params['city']['IN'])) {
+      $params['city'] = $params['city']['IN'];
+    }
+  }
+
+  if(isset($params['contact_id'])) {
+    if(is_array($params['contact_id']) && !is_numeric($params['contact_id'])) {
+      return civicrm_api3_create_error('Invalid parameter: contact_id is not a number.');
+    }
+    $params['contact_id'] = (int)$params['contact_id'];
+  }
+
+  if(isset($params['geo_code_1'])) {
+    if (!is_array($params['geo_code_1'])) {
+      return civicrm_api3_create_error('Invalid coordinates: geo_code_1 is not an array.');
+    }
+    if(isset($params['geo_code_1']['BETWEEN'])) {
+      $params['geo_code_1'] = $params['geo_code_1']['BETWEEN'];
+    }
+    if(count($params['geo_code_1']) != 2) {
+      return civicrm_api3_create_error('Invalid coordinates: geo_code_1 does not contain an array of two floats.');
+    }
+  }
+
+  if(isset($params['geo_code_2'])) {
+    if (!is_array($params['geo_code_2'])) {
+      return civicrm_api3_create_error('Invalid coordinates: geo_code_2 is not an array.');
+    }
+    if(isset($params['geo_code_2']['BETWEEN'])) {
+      $params['geo_code_2'] = $params['geo_code_2']['BETWEEN'];
+    }
+    if(count($params['geo_code_2']) != 2) {
+      return civicrm_api3_create_error('Invalid coordinates: geo_code_2 does not contain an array of two floats.');
+    }
+  }
 
   // Get and return data
   // (Exceptions should be automatically caught by the API handler)
