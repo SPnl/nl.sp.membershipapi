@@ -57,7 +57,7 @@ function civicrm_api3_contact_getspdata($params) {
   $params['sequential'] = ($params['sequential'] == 1) ? TRUE : FALSE;
 
   // Validatie voor Bob!
-  $validSystemParams = ['options','version', 'check_permission', 'prettyprint', 'access_token'];
+  $validSystemParams = ['options','version', 'check_permissions', 'prettyprint', 'access_token'];
   $methodParams = array_merge(array_keys(_civicrm_api3_contact_getspdata_params()), $validSystemParams);
   $invalidParams = [];
   foreach ($params as $k => $p) {
