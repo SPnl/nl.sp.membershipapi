@@ -23,20 +23,36 @@ class CRM_SPCustomApi_Contact {
 
     // Get ACL
     $tables = ['civicrm_contact'];
-    $whereTables = ['civicrm_membership', 'civicrm_relationship']; // Lijkt niet veel te doen
+    $whereTables = [
+      'civicrm_membership',
+      'civicrm_relationship'
+    ]; // Lijkt niet veel te doen
     if (!empty($params['check_permissions'])) {
       // Filter voor users / afdelingen: beperking via ACL door nl.sp.accesscontrol
       $whereClause = \CRM_ACL_BAO_ACL::whereClause(\CRM_Core_Permission::VIEW, $tables, $whereTables, $contactId);
     }
 
-    if (!isset($whereClause) || $whereClause == '1') {
-      // Filter voor landelijke gebruikers of voor legacy-export wordt hier alsnog even handmatig ingesteld, om in ieder geval alleen recente leden mee te geven
-      $membership_type = \CRM_Geostelsel_Config_MembershipTypes::singleton();
-      $whereClause = 'membership_access.membership_type_id IN (' . implode(", ", $membership_type->getMembershipTypeIds()) . ') 
-      AND (membership_access.status_id IN (' . implode(", ", $membership_type->getStatusIds()) . ') 
-      OR (membership_access.status_id = \'' . $membership_type->getDeceasedStatusId() . '\' 
-      AND (membership_access.end_date >= NOW() - INTERVAL 3 MONTH)))';
+    $membership_type = \CRM_Geostelsel_Config_MembershipTypes::singleton();
+    if (empty($params['include_non_menmbers'])) {
+      if (!isset($whereClause) || $whereClause == '1') {
+        // Filter voor landelijke gebruikers of voor legacy-export wordt hier alsnog even handmatig ingesteld, om in ieder geval alleen recente leden mee te geven
+        $whereClause = 'membership_access.membership_type_id IN (' . implode(", ", $membership_type->getMembershipTypeIds()) . ') 
+          AND (membership_access.status_id IN (' . implode(", ", $membership_type->getStatusIds()) . ') 
+          OR (membership_access.status_id = \'' . $membership_type->getDeceasedStatusId() . '\' 
+          AND (membership_access.end_date >= NOW() - INTERVAL 3 MONTH)))';
+      }
+    } else {
+      // Include everyone except those who are deleted or those who are deceased
+      $whereClause = 'contact_a.is_deleted = "0" AND contact_a.is_deceased = "0"';
     }
+
+    $isMemberSelect = "(
+      SELECT count(membership_count.id) as membership_count 
+		  FROM civicrm_membership membership_count 
+      WHERE membership_count.contact_id = contact_a.id
+      AND membership_count.membership_type_id IN (" . implode(", ", $membership_type->getMembershipTypeIds()).")
+      AND membership_count.status_id IN (". implode(", ", $membership_type->getStatusIds()) . ")
+	  ) as is_member";
 
     // Add contact id to where clause if defined
     if (!empty($params['contact_id'])) {
@@ -86,6 +102,15 @@ class CRM_SPCustomApi_Contact {
       $whereClause = " sprel.id IS NOT NULL OR {$whereClause}";
     }
 
+    $groupJoin = '';
+    if (!empty($params['group'])) {
+      $groupIds = $params['group'];
+      if (!is_array($groupIds)) {
+        $groupIds = array($groupIds);
+      }
+      $groupJoin = "INNER JOIN civicrm_group_contact ON contact_a.id = civicrm_group_contact.contact_id AND civicrm_group_contact.status = 'Added' AND civicrm_group_contact.group_id IN (".implode(", ", $groupIds).") ";
+    }
+
     // Other data used to enrich this export
     $genderCodes = \CRM_Core_PseudoConstant::get('CRM_Contact_DAO_Contact', 'gender_id');
     $spGeoNames = static::getSPGeostelselNames();
@@ -97,7 +122,8 @@ SELECT contact_a.id AS contact_id, first_name, middle_name, last_name, cmigr.voo
   cphone.phone AS phone, cmobile.phone AS mobile, cemail.email AS email,
   country.name AS country_name, country.iso_code AS country_code,
   caddrx.gemeente_24 AS gemeente, caddrx.buurt_25 AS cbs_buurt, caddrx.buurtcode_26 AS cbs_buurtcode, caddrx.wijkcode_27 AS cbs_wijkcode,
-  geostelsel.afdeling AS afdeling_code, geostelsel.regio AS regio_code, geostelsel.provincie AS provincie_code
+  geostelsel.afdeling AS afdeling_code, geostelsel.regio AS regio_code, geostelsel.provincie AS provincie_code,
+  {$isMemberSelect}
   FROM civicrm_contact contact_a
   LEFT JOIN civicrm_group_contact `civicrm_group_contact-ACL` ON contact_a.id = `civicrm_group_contact-ACL`.contact_id
   LEFT JOIN civicrm_membership membership_access ON contact_a.id = membership_access.contact_id
@@ -110,10 +136,12 @@ SELECT contact_a.id AS contact_id, first_name, middle_name, last_name, cmigr.voo
   LEFT JOIN civicrm_phone cmobile ON contact_a.id = cmobile.contact_id AND cmobile.phone_type_id = 2
   LEFT JOIN civicrm_email cemail ON contact_a.id = cemail.contact_id AND cemail.is_primary = 1
   {$relationshipJoin}
+  {$groupJoin}
   WHERE {$whereClause}
   GROUP BY contact_a.id
   ORDER BY contact_a.id ASC LIMIT {$params['options']['offset']},{$params['options']['limit']}
 SQL;
+
     // return civicrm_api3_create_error(['query' => $query]);
     $cres = \CRM_Core_DAO::executeQuery($query);
 
