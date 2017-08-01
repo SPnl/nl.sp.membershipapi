@@ -31,6 +31,8 @@ function _civicrm_api3_contact_getspdata_params() {
                                 'title' => 'Include SP relationship data', 'type' => CRM_Utils_Type::T_BOOLEAN],
     'include_non_menmbers' => ['api.required' => 0, 'name' => 'include_non_menmbers',
                                  'title' => 'Also include non members', 'type' => CRM_Utils_Type::T_BOOLEAN],
+    'include_non_members' => ['api.required' => 0, 'name' => 'include_non_members',
+                                 'title' => 'Also include non members', 'type' => CRM_Utils_Type::T_BOOLEAN],
     'sequential'            => ['api.required' => 0, 'name' => 'sequential',
                                 'title' => 'Sequential', 'type' => CRM_Utils_Type::T_BOOLEAN],
   ];
@@ -64,6 +66,7 @@ function civicrm_api3_contact_getspdata($params) {
   $params['include_memberships'] = ($params['include_memberships'] == 1);
   $params['include_relationships'] = ($params['include_relationships'] == 1);
   $params['include_non_menmbers'] = ($params['include_non_menmbers'] == 1);
+  $params['include_non_members'] = ($params['include_non_members'] == 1);
   $params['options']['limit'] = !empty($params['options']['limit']) ? (int) $params['options']['limit'] : 25;
   $params['options']['offset'] = !empty($params['options']['offset']) ? (int) $params['options']['offset'] : 0;
   $params['sequential'] = ($params['sequential'] == 1) ? TRUE : FALSE;

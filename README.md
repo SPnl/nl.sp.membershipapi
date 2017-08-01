@@ -53,7 +53,7 @@ The options 'limit', 'offset' and 'sequential' are also supported.
 | include_spspecial | n | 0 | Include SP staff who aren't members |
 | include_memberships | n | 0 | Include SP membership data |
 | include_relationships | n | 0 | Include SP relationship data |
-| include_non_menmbers | n | 0 | Include all contacts even if they are not a member |
+| include_non_members | n | 0 | Include all contacts even if they are not a member |
 | options.limit | n | 25 | Limit |
 | options.offset | n | 0 | Offset | 
 | sequential | n | 0 | Sequential |

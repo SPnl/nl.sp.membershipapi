@@ -33,7 +33,7 @@ class CRM_SPCustomApi_Contact {
     }
 
     $membership_type = \CRM_Geostelsel_Config_MembershipTypes::singleton();
-    if (empty($params['include_non_menmbers'])) {
+    if (empty($params['include_non_menmbers']) && empty($params['include_non_members'])) {
       if (!isset($whereClause) || $whereClause == '1') {
         // Filter voor landelijke gebruikers of voor legacy-export wordt hier alsnog even handmatig ingesteld, om in ieder geval alleen recente leden mee te geven
         $whereClause = 'membership_access.membership_type_id IN (' . implode(", ", $membership_type->getMembershipTypeIds()) . ') 
