@@ -1,0 +1,13 @@
+{
+    "name": "spnl/nl.sp.spcustomapi",
+    "description": "Custom API methods for the SP (former name: nl.sp.membershipapi)",
+    "type": "civicrm-module",
+    "license": "AGPL-3.0",
+    "authors": [
+        {
+            "name": "CiviCooP (Jaap Jansma, Kevin Levie)",
+            "email": "helpdesk@civicoop.org"
+        }
+    ],
+    "require": {}
+}
