@@ -29,7 +29,8 @@ class CRM_SPCustomApi_Contact {
     ]; // Lijkt niet veel te doen
     if (!empty($params['check_permissions'])) {
       // Filter voor users / afdelingen: beperking via ACL door nl.sp.accesscontrol
-      $whereClause = \CRM_ACL_BAO_ACL::whereClause(\CRM_Core_Permission::VIEW, $tables, $whereTables, $contactId);
+      //$whereClause = \CRM_ACL_BAO_ACL::whereClause(\CRM_Core_Permission::VIEW, $tables, $whereTables, $contactId);
+      $whereClause = CRM_ACL_API::whereClause(CRM_Core_Permission::VIEW, $tables, $whereTables, $contactId);
     }
 
     $membership_type = \CRM_Geostelsel_Config_MembershipTypes::singleton();
@@ -125,6 +126,7 @@ SELECT contact_a.id AS contact_id, first_name, middle_name, last_name, cmigr.voo
   geostelsel.afdeling AS afdeling_code, geostelsel.regio AS regio_code, geostelsel.provincie AS provincie_code,
   {$isMemberSelect}
   FROM civicrm_contact contact_a
+  INNER JOIN `civicrm_acl_contacts` ON civicrm_acl_contacts.`contact_id` = contact_a.id
   LEFT JOIN civicrm_group_contact `civicrm_group_contact-ACL` ON contact_a.id = `civicrm_group_contact-ACL`.contact_id
   LEFT JOIN civicrm_membership membership_access ON contact_a.id = membership_access.contact_id
   LEFT JOIN civicrm_value_geostelsel geostelsel ON contact_a.id = geostelsel.entity_id
@@ -141,7 +143,6 @@ SELECT contact_a.id AS contact_id, first_name, middle_name, last_name, cmigr.voo
   GROUP BY contact_a.id
   ORDER BY contact_a.id ASC LIMIT {$params['options']['offset']},{$params['options']['limit']}
 SQL;
-
     // return civicrm_api3_create_error(['query' => $query]);
     $cres = \CRM_Core_DAO::executeQuery($query);
 
