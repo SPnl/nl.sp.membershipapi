@@ -17,7 +17,7 @@ require_once 'spcustomapi.civix.php';
  * @param array $permissions
  */
 function spcustomapi_civicrm_alterAPIPermissions($entity, $action, &$params, &$permissions) {
-  CRM_SPCustomApi_Contact::alterAPIPermissions($permissions);
+  CRM_SPCustomApi_Contact::alterAPIPermissions($entity, $action, $params, $permissions);
 }
 
 /**
