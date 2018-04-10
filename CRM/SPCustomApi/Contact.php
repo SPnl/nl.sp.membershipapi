@@ -267,8 +267,22 @@ SQL;
    * Set custom permissions per API method here (called from spcustomapi.php)
    * @param array $permissions API permissions array
    */
-  public static function alterAPIPermissions(&$permissions = []) {
-    $permissions['contact']['getspdata'] = ['access CiviCRM'];
+  public static function alterAPIPermissions($entity, $action, &$params, &$permissions = []) {
+  	if (strtolower($entity) == 'contact' && strtolower($action) == 'getspdata') {
+  		if (empty($params['include_non_menmbers']) && empty($params['include_non_members'])) {
+  			$permissions['contact']['getspdata'] = ['access CiviCRM'];
+  		} else {
+				$permissions['contact']['getspdata'] = ['access to contact.getspdata api'];	
+  		}
+		}
+    
+  }
+	
+	/** 
+	 * Adds another permission to access the contact.getspdata api
+	 */
+  public static function getExtraPermissions(&$permissions) {
+    $permissions['access to contact.getspdata api'] = ts('CiviCRM') . ': ' . ts('Access to Contact.Getspdata API');
   }
 
   /**
