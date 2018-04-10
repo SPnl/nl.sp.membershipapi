@@ -269,7 +269,14 @@ SQL;
    * @param array $permissions API permissions array
    */
   public static function alterAPIPermissions(&$permissions = []) {
-    $permissions['contact']['getspdata'] = ['access CiviCRM'];
+    $permissions['contact']['getspdata'] = ['access to contact.getspdata api'];
+  }
+	
+	/** 
+	 * Adds another permission to access the contact.getspdata api
+	 */
+  public static function getExtraPermissions(&$permissions) {
+    $permissions['access to contact.getspdata api'] = ts('CiviCRM') . ': ' . ts('Access to Contact.Getspdata API');
   }
 
   /**

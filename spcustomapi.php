@@ -21,6 +21,16 @@ function spcustomapi_civicrm_alterAPIPermissions($entity, $action, &$params, &$p
 }
 
 /**
+ * Implementation of hook_civicrm_permission
+ * Voegt extra permissies toe die gebruikt worden door deze extensie.
+ * O.a. voor het gebruiker van de Contact.getspdata api.
+ * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_permission
+ */
+function spcustomapi_civicrm_permission(&$permissions) {
+  CRM_SPCustomApi_Contact::getExtraPermissions($permissions);
+}
+
+/**
  * Implementation of hook_civicrm_config
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config
  */
