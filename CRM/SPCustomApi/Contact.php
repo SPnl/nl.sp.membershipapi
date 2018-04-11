@@ -30,6 +30,11 @@ class CRM_SPCustomApi_Contact {
     if (!empty($params['check_permissions'])) {
       // Filter voor users / afdelingen: beperking via ACL door nl.sp.accesscontrol
       //$whereClause = \CRM_ACL_BAO_ACL::whereClause(\CRM_Core_Permission::VIEW, $tables, $whereTables, $contactId);
+      // Make sure the acl cache is loaded:
+      $aclContactCache = \Civi::service('acl_contact_cache');
+			if (!$aclContactCache->isCacheValidForCurrentUser(CRM_Core_Permission::VIEW)) {
+				$aclContactCache->refreshCacheForCurrentUser(CRM_Core_Permission::VIEW);
+			}
       $whereClause = CRM_ACL_API::whereClause(CRM_Core_Permission::VIEW, $tables, $whereTables, $contactId);
     }
 
