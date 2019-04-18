@@ -21,6 +21,17 @@ class CRM_SPCustomApi_Contact {
       throw new \CRM_SPCustomApi_Exception('User not logged in or session->userID not set.', 400);
     }
 
+    // Get ACL
+    $tables = ['civicrm_contact'];
+    $whereTables = [
+      'civicrm_membership',
+      'civicrm_relationship'
+    ]; // Lijkt niet veel te doen
+    if (!empty($params['check_permissions'])) {
+      // Filter voor users / afdelingen: beperking via ACL door nl.sp.accesscontrol
+      $whereClause = \CRM_ACL_BAO_ACL::whereClause(\CRM_Core_Permission::VIEW, $tables, $whereTables, $contactId);
+    }
+
     $membership_type = \CRM_Geostelsel_Config_MembershipTypes::singleton();
     if (empty($params['include_non_menmbers']) && empty($params['include_non_members'])) {
       if (!isset($whereClause) || $whereClause == '1') {
@@ -256,22 +267,8 @@ SQL;
    * Set custom permissions per API method here (called from spcustomapi.php)
    * @param array $permissions API permissions array
    */
-  public static function alterAPIPermissions($entity, $action, &$params, &$permissions = []) {
-  	if (strtolower($entity) == 'contact' && strtolower($action) == 'getspdata') {
-  		if (empty($params['include_non_menmbers']) && empty($params['include_non_members'])) {
-  			$permissions['contact']['getspdata'] = ['access CiviCRM'];
-  		} else {
-				$permissions['contact']['getspdata'] = ['access to contact.getspdata api'];	
-  		}
-		}
-    
-  }
-	
-	/** 
-	 * Adds another permission to access the contact.getspdata api
-	 */
-  public static function getExtraPermissions(&$permissions) {
-    $permissions['access to contact.getspdata api'] = ts('CiviCRM') . ': ' . ts('Access to Contact.Getspdata API');
+  public static function alterAPIPermissions(&$permissions = []) {
+    $permissions['contact']['getspdata'] = ['access CiviCRM'];
   }
 
   /**
