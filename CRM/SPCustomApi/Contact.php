@@ -36,9 +36,9 @@ class CRM_SPCustomApi_Contact {
     if (empty($params['include_non_menmbers']) && empty($params['include_non_members'])) {
       if (!isset($whereClause) || $whereClause == '1') {
         // Filter voor landelijke gebruikers of voor legacy-export wordt hier alsnog even handmatig ingesteld, om in ieder geval alleen recente leden mee te geven
-        $whereClause = 'membership_access.membership_type_id IN (' . implode(", ", $membership_type->getMembershipTypeIds()) . ') 
-          AND (membership_access.status_id IN (' . implode(", ", $membership_type->getStatusIds()) . ') 
-          OR (membership_access.status_id = \'' . $membership_type->getDeceasedStatusId() . '\' 
+        $whereClause = 'membership_access.membership_type_id IN (' . implode(", ", $membership_type->getMembershipTypeIds()) . ')
+          AND (membership_access.status_id IN (' . implode(", ", $membership_type->getStatusIds()) . ')
+          OR (membership_access.status_id = \'' . $membership_type->getDeceasedStatusId() . '\'
           AND (membership_access.end_date >= NOW() - INTERVAL 3 MONTH)))';
       }
     } else {
@@ -47,8 +47,8 @@ class CRM_SPCustomApi_Contact {
     }
 
     $isMemberSelect = "(
-      SELECT count(membership_count.id) as membership_count 
-		  FROM civicrm_membership membership_count 
+      SELECT count(membership_count.id) as membership_count
+		  FROM civicrm_membership membership_count
       WHERE membership_count.contact_id = contact_a.id
       AND membership_count.membership_type_id IN (" . implode(", ", $membership_type->getMembershipTypeIds()).")
       AND membership_count.status_id IN (". implode(", ", $membership_type->getStatusIds()) . ")
@@ -111,6 +111,11 @@ class CRM_SPCustomApi_Contact {
       $groupJoin = "INNER JOIN civicrm_group_contact ON contact_a.id = civicrm_group_contact.contact_id AND civicrm_group_contact.status = 'Added' AND civicrm_group_contact.group_id IN (".implode(", ", $groupIds).") ";
     }
 
+    $orderByGroupContact = '';
+    if (!empty($params['order_by_group_contact_id'])) {
+      $orderByGroupContact = 'civicrm_group_contact.id ASC,';
+    }
+
     // Other data used to enrich this export
     $genderCodes = \CRM_Core_PseudoConstant::get('CRM_Contact_DAO_Contact', 'gender_id');
     $spGeoNames = static::getSPGeostelselNames();
@@ -139,7 +144,7 @@ SELECT contact_a.id AS contact_id, first_name, middle_name, last_name, cmigr.voo
   {$groupJoin}
   WHERE {$whereClause}
   GROUP BY contact_a.id
-  ORDER BY contact_a.id ASC LIMIT {$params['options']['offset']},{$params['options']['limit']}
+  ORDER BY {$orderByGroupContact} contact_a.id ASC LIMIT {$params['options']['offset']},{$params['options']['limit']}
 SQL;
 
     // return civicrm_api3_create_error(['query' => $query]);
@@ -177,7 +182,7 @@ SQL;
       $mStatuses = "'" . implode("','", ['New', 'Current', 'Grace', 'Deceased']) . "'";
 
       $mquery = <<<SQL
-SELECT cmember.contact_id, cmember.id, cmember.membership_type_id AS type_id, cmtype.name AS type_name, cmember.status_id, cmstatus.name AS status_name, cmember.join_date, cmember.start_date, cmember.end_date, cmigr.bron_4 AS source, cmigr.reden_6 AS opzegreden, cwelk.cadeau_8 AS cadeau, cwelk.datum_14 AS cadeau_datum 
+SELECT cmember.contact_id, cmember.id, cmember.membership_type_id AS type_id, cmtype.name AS type_name, cmember.status_id, cmstatus.name AS status_name, cmember.join_date, cmember.start_date, cmember.end_date, cmigr.bron_4 AS source, cmigr.reden_6 AS opzegreden, cwelk.cadeau_8 AS cadeau, cwelk.datum_14 AS cadeau_datum
   FROM civicrm_membership cmember
   LEFT JOIN civicrm_membership_type cmtype ON cmember.membership_type_id = cmtype.id
   LEFT JOIN civicrm_membership_status cmstatus ON cmember.status_id = cmstatus.id
